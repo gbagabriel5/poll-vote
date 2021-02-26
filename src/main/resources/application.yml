@@ -1,0 +1,5 @@
+### Application Settings
+application:
+  client:
+    endpoint:
+      consulta-cpf: "https://user-info.herokuapp.com/users/"
