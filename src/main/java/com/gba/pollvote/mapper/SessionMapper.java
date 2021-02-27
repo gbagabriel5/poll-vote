@@ -5,13 +5,15 @@ import com.gba.pollvote.domain.Session;
 import com.gba.pollvote.dto.PollDTO;
 import com.gba.pollvote.dto.SessionDTO;
 
-public class SessionMapper {
+public class SessionMapper implements GenericMapper<Session,SessionDTO>{
 
+    @Override
     public Session convertToEntity(SessionDTO dto) {
         Session entity = new Session();
         entity.setId(dto.getId());
-        entity.setStartVote(dto.getStartVote());
-        entity.setEndVote(dto.getEndVote());
+        entity.setSessionDuration(dto.getSessionDuration());
+        entity.setStartDate(dto.getStartDate());
+        entity.setEndDate(dto.getEndDate());
         if(dto.getPollDTO() != null) {
             Poll poll =  new Poll();
             poll.setId(dto.getPollDTO().getId());
@@ -21,11 +23,13 @@ public class SessionMapper {
         return entity;
     }
 
+    @Override
     public SessionDTO convertToDTO(Session entity) {
         SessionDTO dto = new SessionDTO();
         dto.setId(entity.getId());
-        dto.setStartVote(entity.getStartVote());
-        dto.setEndVote(entity.getEndVote());
+        dto.setSessionDuration(entity.getSessionDuration());
+        dto.setStartDate(entity.getStartDate());
+        dto.setEndDate(entity.getEndDate());
         if(entity.getPoll() != null) {
             PollDTO pollDTO =  new PollDTO();
             pollDTO.setId(entity.getPoll().getId());

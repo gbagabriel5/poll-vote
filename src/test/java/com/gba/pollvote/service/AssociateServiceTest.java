@@ -26,9 +26,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AssociateServiceTest {
 
     @Mock
-    AssociateRepository repository;
+    AssociateRepository associateRepository;
     @InjectMocks
-    AssociateServiceImpl service;
+    AssociateServiceImpl associateService;
 
     @BeforeEach
     public void setUp(){}
@@ -38,8 +38,8 @@ class AssociateServiceTest {
 
         Associate associate = Associate.builder().name("Gabriel").cpf("04182914201").build();
 
-        Mockito.when(service.create(associate)).thenReturn(associate);
-        Associate expectedAssociate = service.create(associate);
+        Mockito.when(associateService.create(associate)).thenReturn(associate);
+        Associate expectedAssociate = associateService.create(associate);
 
         assertThat(associate).isEqualTo(expectedAssociate);
     }
@@ -50,7 +50,7 @@ class AssociateServiceTest {
         Associate associate = Associate.builder().name("Gabriel").cpf("04182914202").build();
 
         Assertions.assertThrows(InvalidCpfException.class,
-                () -> Mockito.when(service.create(associate)).thenReturn(associate)
+                () -> Mockito.when(associateService.create(associate)).thenReturn(associate)
         );
     }
 
@@ -59,10 +59,10 @@ class AssociateServiceTest {
 
         Associate associate = Associate.builder().name("Gabriel").cpf("04182914201").build();
 
-        Mockito.when(repository.findByCpf("04182914201")).thenReturn(Optional.of(associate));
+        Mockito.when(associateRepository.findByCpf("04182914201")).thenReturn(Optional.of(associate));
 
         Assertions.assertThrows(EntityExistsException.class,
-                () -> service.create(associate)
+                () -> associateService.create(associate)
         );
     }
 
@@ -71,10 +71,10 @@ class AssociateServiceTest {
 
         Associate associate = Associate.builder().name("Gabriel").cpf("04182914201").build();
 
-        Mockito.when(repository.findByName("Gabriel")).thenReturn(Optional.of(associate));
+        Mockito.when(associateRepository.findByName("Gabriel")).thenReturn(Optional.of(associate));
 
         Assertions.assertThrows(EntityExistsException.class,
-                () -> service.create(associate)
+                () -> associateService.create(associate)
         );
     }
 
@@ -84,8 +84,8 @@ class AssociateServiceTest {
         list.add(Associate.builder().name("Gabriel").cpf("04182914201").build());
         list.add(Associate.builder().name("Jucelino").cpf("32065817291").build());
 
-        Mockito.when(service.getAll()).thenReturn(list);
-        List<Associate> listExpected = service.getAll();
+        Mockito.when(associateService.getAll()).thenReturn(list);
+        List<Associate> listExpected = associateService.getAll();
 
         Assertions.assertEquals(listExpected, list);
     }
@@ -95,8 +95,8 @@ class AssociateServiceTest {
         Long id = 1L;
         Associate associate = Associate.builder().id(id).name("Gabriel").cpf("04182914201").build();
 
-        Mockito.when(service.getById(id)).thenReturn(Optional.of(associate));
-        Optional<Associate> expectedAssociate = service.getById(id);
+        Mockito.when(associateService.getById(id)).thenReturn(Optional.of(associate));
+        Optional<Associate> expectedAssociate = associateService.getById(id);
 
         assertThat(expectedAssociate).isNotNull();
     }

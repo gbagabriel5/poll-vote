@@ -73,7 +73,7 @@ public class PollServiceTest {
     @Test
     void getPollById() {
         Long id = 1L;
-        Poll poll = Poll.builder().id(id).name("Teste").build();
+        Poll poll = Poll.builder().id(id).name("teste").build();
 
         Mockito.when(pollService.getById(id)).thenReturn(Optional.of(poll));
         Optional<Poll> expectedPoll = pollService.getById(id);

@@ -9,10 +9,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @Api(value = "Poll Controller")
 @RestController
@@ -32,5 +30,11 @@ public class PollController {
     public PollDTO create(@ApiParam(value = "Poll", required = true) @RequestBody @Validated PollDTO dto) {
         Poll entity = pollMapper.convertToEntity(dto);
         return pollMapper.convertToDTO(pollService.create(entity));
+    }
+
+    @GetMapping
+    @ApiParam(value = "List All Polls")
+    public List<PollDTO> findAll() {
+        return pollMapper.convertToListDTO(pollService.getAll());
     }
 }

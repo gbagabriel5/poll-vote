@@ -1,16 +1,11 @@
 package com.gba.pollvote.utils;
 
 import com.gba.pollvote.exception.InvalidCpfException;
-import com.gba.pollvote.service.MessagesService;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.InputMismatchException;
 
 public class ValidateCpf {
 
-    @Autowired
-    private static MessagesService messageService;
-
-    public static final String INVALID_CPF = messageService.get("invalid.cpf");
+    public static final String INVALID_CPF = "invalid.cpf";
 
     private ValidateCpf() {
     }

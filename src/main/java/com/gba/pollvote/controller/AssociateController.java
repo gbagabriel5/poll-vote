@@ -2,10 +2,8 @@ package com.gba.pollvote.controller;
 
 import com.gba.pollvote.domain.Associate;
 import com.gba.pollvote.dto.AssociateDTO;
-import com.gba.pollvote.exception.NotFoundException;
 import com.gba.pollvote.mapper.AssociateMapper;
 import com.gba.pollvote.service.AssociateService;
-import com.gba.pollvote.service.MessagesService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,8 +21,6 @@ public class AssociateController {
     @Autowired
     private final AssociateService associateService;
     private final AssociateMapper associateMapper = new AssociateMapper();
-    @Autowired
-    private MessagesService messageService;
 
     public AssociateController(AssociateService associateService) {
         this.associateService = associateService;

@@ -7,7 +7,6 @@ import com.gba.pollvote.exception.InvalidCpfException;
 import com.gba.pollvote.mapper.AssociateMapper;
 import com.gba.pollvote.repository.AssociateRepository;
 import com.gba.pollvote.service.AssociateService;
-import com.gba.pollvote.service.MessagesService;
 import com.gba.pollvote.utils.ValidateCpf;
 import feign.FeignException;
 import org.slf4j.Logger;
@@ -28,9 +27,6 @@ public class AssociateServiceImpl implements AssociateService {
     @Autowired
     private UserClient userClient;
 
-    @Autowired
-    protected MessagesService messagesService;
-
     private AssociateMapper associateMapper = new AssociateMapper();
 
     private Logger logger = LoggerFactory.getLogger(AssociateServiceImpl.class);
@@ -45,13 +41,13 @@ public class AssociateServiceImpl implements AssociateService {
         ValidateCpf.isCPF(associate.getCpf());
 
         if(associateRepository.findByCpf(associate.getCpf()).isPresent()){
-            logger.error(messagesService.get("cpf.exist"));
-            throw new EntityExistsException(messagesService.get("cpf.exist"));
+            logger.error("cpf.exist");
+            throw new EntityExistsException("cpf.exist");
         }
 
         if(associateRepository.findByName(associate.getName()).isPresent()){
-            logger.error(messagesService.get("name.exist"));
-            throw new EntityExistsException(messagesService.get("name.exist"));
+            logger.error("name.exist");
+            throw new EntityExistsException("name.exist");
         }
     }
 
@@ -64,7 +60,7 @@ public class AssociateServiceImpl implements AssociateService {
     public Optional<Associate> getById(Long id) {
         Optional<Associate> associate = associateRepository.findById(id);
         if(associate.isEmpty())
-            throw new EntityNotFoundException(messagesService.get("associate.not.found"));
+            throw new EntityNotFoundException("associate.not.found");
         return associate;
     }
 
@@ -74,7 +70,7 @@ public class AssociateServiceImpl implements AssociateService {
         try{
             flagAbleToVoteDto = userClient.isAbleToVote(cpf);
         }catch (FeignException e){
-            throw new EntityNotFoundException(messagesService.get("user.not.found"));
+            throw new EntityNotFoundException("user.not.found");
         }
         return flagAbleToVoteDto.getStatus().equals("ABLE_TO_VOTE");
     }

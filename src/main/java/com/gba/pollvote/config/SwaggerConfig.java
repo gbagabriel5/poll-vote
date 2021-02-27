@@ -46,9 +46,8 @@ public class SwaggerConfig implements WebMvcConfigurer {
     }
 
     private ApiInfo apiInfo() {
-        ApiInfo apiInfos = new ApiInfoBuilder()
+        return new ApiInfoBuilder()
                 .title(TITLE)
                 .build();
-        return apiInfos;
     }
 }
