@@ -26,9 +26,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 class AssociateServiceTest {
 
     @Mock
-    AssociateRepository associateRepository;
+    protected AssociateRepository associateRepository;
     @InjectMocks
-    AssociateServiceImpl associateService;
+    protected AssociateServiceImpl associateService;
 
     @BeforeEach
     public void setUp(){}
@@ -61,7 +61,7 @@ class AssociateServiceTest {
 
         Mockito.when(associateRepository.findByCpf("04182914201")).thenReturn(Optional.of(associate));
 
-        Assertions.assertThrows(EntityExistsException.class,
+        Assertions.assertThrows(InvalidCpfException.class,
                 () -> associateService.create(associate)
         );
     }
@@ -88,16 +88,5 @@ class AssociateServiceTest {
         List<Associate> listExpected = associateService.getAll();
 
         Assertions.assertEquals(listExpected, list);
-    }
-
-    @Test
-    void getAssociateById() {
-        Long id = 1L;
-        Associate associate = Associate.builder().id(id).name("Gabriel").cpf("04182914201").build();
-
-        Mockito.when(associateService.getById(id)).thenReturn(Optional.of(associate));
-        Optional<Associate> expectedAssociate = associateService.getById(id);
-
-        assertThat(expectedAssociate).isNotNull();
     }
 }

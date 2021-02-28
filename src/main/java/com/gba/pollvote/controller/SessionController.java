@@ -8,6 +8,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -23,14 +25,23 @@ public class SessionController {
 
     @PostMapping
     @ApiOperation(value = "Create Session")
-    public SessionDTO create(@ApiParam(value = "Session", required = true) @RequestBody @Validated SessionDTO dto) {
+    public ResponseEntity<SessionDTO> create(
+            @ApiParam(value = "Session", required = true)
+            @RequestBody @Validated SessionDTO dto
+    ) {
         Session entity = sessionMapper.convertToEntity(dto);
-        return sessionMapper.convertToDTO(sessionService.create(entity));
+        return new ResponseEntity<>(
+                sessionMapper.convertToDTO(sessionService.create(entity)),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping
     @ApiParam(value = "List All Sessions")
-    public List<SessionDTO> findAll() {
-        return sessionMapper.convertToListDTO(sessionService.getAll());
+    public ResponseEntity<List<SessionDTO>> findAll() {
+        return new ResponseEntity<>(
+                sessionMapper.convertToListDTO(sessionService.getAll()),
+                HttpStatus.OK
+        );
     }
 }

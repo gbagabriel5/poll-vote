@@ -9,27 +9,22 @@ import com.gba.pollvote.repository.AssociateRepository;
 import com.gba.pollvote.service.AssociateService;
 import com.gba.pollvote.utils.ValidateCpf;
 import feign.FeignException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AssociateServiceImpl implements AssociateService {
 
     @Autowired
-    private AssociateRepository associateRepository;
+    protected AssociateRepository associateRepository;
 
     @Autowired
-    private UserClient userClient;
+    protected UserClient userClient;
 
-    private AssociateMapper associateMapper = new AssociateMapper();
-
-    private Logger logger = LoggerFactory.getLogger(AssociateServiceImpl.class);
+    private final AssociateMapper associateMapper = new AssociateMapper();
 
     @Override
     public Associate create(Associate associate) throws InvalidCpfException {
@@ -41,13 +36,11 @@ public class AssociateServiceImpl implements AssociateService {
         ValidateCpf.isCPF(associate.getCpf());
 
         if(associateRepository.findByCpf(associate.getCpf()).isPresent()){
-            logger.error("cpf.exist");
-            throw new EntityExistsException("cpf.exist");
+            throw new InvalidCpfException("Cpf ja cadastrado!");
         }
 
         if(associateRepository.findByName(associate.getName()).isPresent()){
-            logger.error("name.exist");
-            throw new EntityExistsException("name.exist");
+            throw new EntityExistsException("Nome ja cadastrado!");
         }
     }
 
@@ -57,20 +50,12 @@ public class AssociateServiceImpl implements AssociateService {
     }
 
     @Override
-    public Optional<Associate> getById(Long id) {
-        Optional<Associate> associate = associateRepository.findById(id);
-        if(associate.isEmpty())
-            throw new EntityNotFoundException("associate.not.found");
-        return associate;
-    }
-
-    @Override
-    public boolean checkIfIsAbleToVote(String cpf) {
+    public boolean checkIfIsAbleToVote(String cpf) throws EntityNotFoundException {
         AbleToVoteDto flagAbleToVoteDto;
         try{
             flagAbleToVoteDto = userClient.isAbleToVote(cpf);
         }catch (FeignException e){
-            throw new EntityNotFoundException("user.not.found");
+            throw new EntityNotFoundException("Usuario incapaz de votar!");
         }
         return flagAbleToVoteDto.getStatus().equals("ABLE_TO_VOTE");
     }
