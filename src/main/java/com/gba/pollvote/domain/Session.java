@@ -19,6 +19,8 @@ public class Session implements BaseEntity<Long>{
 
     private LocalDateTime startDate;
 
+    private LocalDateTime endDate;
+
     @ManyToOne
     private Poll poll;
 }
