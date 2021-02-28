@@ -2,6 +2,9 @@ package com.gba.pollvote.controller;
 
 import com.gba.pollvote.domain.Session;
 import com.gba.pollvote.dto.SessionDTO;
+import com.gba.pollvote.dto.VoteResultDTO;
+import com.gba.pollvote.dto.custom.SessionCustomDTO;
+import com.gba.pollvote.exception.DefaultException;
 import com.gba.pollvote.mapper.SessionMapper;
 import com.gba.pollvote.service.SessionService;
 import io.swagger.annotations.Api;
@@ -27,13 +30,28 @@ public class SessionController {
     @ApiOperation(value = "Create Session")
     public ResponseEntity<SessionDTO> create(
             @ApiParam(value = "Session", required = true)
-            @RequestBody @Validated SessionDTO dto
+            @RequestBody @Validated SessionCustomDTO dto
     ) {
-        Session entity = sessionMapper.convertToEntity(dto);
+        Session entity = sessionMapper.convertToCustomEntity(dto);
         return new ResponseEntity<>(
                 sessionMapper.convertToDTO(sessionService.create(entity)),
                 HttpStatus.OK
         );
+    }
+
+    @GetMapping("getvoteresult/{sessionId}")
+    @ApiParam(value = "Get Session Result")
+    public ResponseEntity<VoteResultDTO> getSessionResultById(
+            @PathVariable(value = "sessionId") Long id
+    ) {
+        try {
+            return new ResponseEntity<>(
+                    sessionService.getSessionResultById(id),
+                    HttpStatus.OK
+            );
+        } catch (Throwable throwable) {
+            throw new DefaultException(throwable.getMessage());
+        }
     }
 
     @GetMapping

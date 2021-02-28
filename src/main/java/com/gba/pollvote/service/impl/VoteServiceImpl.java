@@ -33,9 +33,10 @@ public class VoteServiceImpl implements VoteService {
     protected AssociateService associateService;
 
     @Override
-    public Vote vote(Vote vote) throws TimeoutException, EntityNotFoundException {
+    public Boolean vote(Vote vote) throws TimeoutException, EntityNotFoundException {
         voteValidation(vote);
-        return voteRepository.save(vote);
+        voteRepository.save(vote);
+        return true;
     }
 
     private void voteValidation(Vote vote) throws TimeoutException, EntityNotFoundException {
@@ -52,9 +53,9 @@ public class VoteServiceImpl implements VoteService {
                     throw new TimeoutException("Sessao encerrada!");
 
                 if(voteRepository.findByAssociateIdAndSessionId(vote.getAssociate().getId(), vote.getSession().getId()).isPresent())
-                    throw new EntityExistsException("Associado já votou.");
+                    throw new EntityExistsException("Este Associado ja votou.");
             } else {
-                throw new EntityNotFoundException("Sessao não encontrada!");
+                throw new EntityNotFoundException("Sessao nao encontrada!");
             }
         } else {
             throw new EntityNotFoundException("Associado nao encontrado!");
