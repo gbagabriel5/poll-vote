@@ -53,8 +53,7 @@ public class VoteServiceTest {
         Session session = Session.builder()
                 .sessionDuration(1)
                 .poll(poll)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now()).build();
+                .startDate(LocalDateTime.now()).build();
 
         Mockito.when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
 
@@ -72,8 +71,7 @@ public class VoteServiceTest {
         Session session = Session.builder()
                 .sessionDuration(1)
                 .poll(poll)
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now()).build();
+                .startDate(LocalDateTime.now()).build();
 
         Mockito.when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
 

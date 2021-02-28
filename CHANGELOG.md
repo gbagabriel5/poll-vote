@@ -15,11 +15,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed for any bug fixes.
 - Security in case of vulnerabilities.
 
-## [1.0.2] 2021gi-02-27
+## [1.0.3] 2021-02-27
 
 ### Added
-- Adding vote and your tests 
-- Exeption Handler
+- getResultVotes with test
+- clean Request Object DTO to Session and Vote
+
+### Changed
+- Request Object of Session and Vote
+- convertToEntity of VoteMapper
+- Return of VoteCreate Service and Controller to Boolean
+- startDate type formatter to SessionDTO
+
+### Removed
+- convertToDTO of VoteMapper, that was not being used.
+
+## [1.0.2] 2021-02-27
+
+### Added
+- Adding vote and your tests
+- Exception Handler
 
 ### Changed  
 - Return of controller endpoints

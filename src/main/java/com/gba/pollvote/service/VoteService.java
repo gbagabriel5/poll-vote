@@ -5,5 +5,5 @@ import javax.persistence.EntityNotFoundException;
 import java.util.concurrent.TimeoutException;
 
 public interface VoteService {
-    Vote vote(Vote vote) throws TimeoutException, EntityNotFoundException;
+    Boolean vote(Vote vote) throws TimeoutException, EntityNotFoundException;
 }

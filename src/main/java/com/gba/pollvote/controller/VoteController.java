@@ -2,6 +2,7 @@ package com.gba.pollvote.controller;
 
 import com.gba.pollvote.domain.Vote;
 import com.gba.pollvote.dto.VoteDTO;
+import com.gba.pollvote.dto.custom.VoteCustomDTO;
 import com.gba.pollvote.exception.DefaultException;
 import com.gba.pollvote.mapper.VoteMapper;
 import com.gba.pollvote.service.VoteService;
@@ -31,9 +32,9 @@ public class VoteController {
             @ApiResponse(code = 201, message = "Successfully created"),
             @ApiResponse(code = 400, message = "Validation error")
     })
-    public ResponseEntity<Vote> create(
+    public ResponseEntity<Boolean> create(
             @ApiParam(value = "Vote", required = true)
-            @RequestBody @Validated VoteDTO dto
+            @RequestBody @Validated VoteCustomDTO dto
     ) {
         try {
             return new ResponseEntity<>(

@@ -4,8 +4,15 @@ import com.gba.pollvote.domain.Poll;
 import com.gba.pollvote.domain.Session;
 import com.gba.pollvote.dto.PollDTO;
 import com.gba.pollvote.dto.SessionDTO;
+import com.gba.pollvote.dto.custom.SessionCustomDTO;
 
 public class SessionMapper implements GenericMapper<Session,SessionDTO>{
+
+    public Session convertToCustomEntity(SessionCustomDTO dto) {
+        return Session.builder()
+                .poll(Poll.builder().id(dto.getPollId()).build())
+                .sessionDuration(dto.getSessionDuration()).build();
+    }
 
     @Override
     public Session convertToEntity(SessionDTO dto) {
@@ -13,12 +20,10 @@ public class SessionMapper implements GenericMapper<Session,SessionDTO>{
         entity.setId(dto.getId());
         entity.setSessionDuration(dto.getSessionDuration());
         entity.setStartDate(dto.getStartDate());
-        entity.setEndDate(dto.getEndDate());
         if(dto.getPollDTO() != null) {
-            Poll poll =  new Poll();
-            poll.setId(dto.getPollDTO().getId());
-            poll.setName(dto.getPollDTO().getName());
-            entity.setPoll(poll);
+            entity.setPoll(Poll.builder()
+                            .id(dto.getPollDTO().getId())
+                            .name(dto.getPollDTO().getName()).build());
         }
         return entity;
     }
@@ -29,12 +34,10 @@ public class SessionMapper implements GenericMapper<Session,SessionDTO>{
         dto.setId(entity.getId());
         dto.setSessionDuration(entity.getSessionDuration());
         dto.setStartDate(entity.getStartDate());
-        dto.setEndDate(entity.getEndDate());
         if(entity.getPoll() != null) {
-            PollDTO pollDTO =  new PollDTO();
-            pollDTO.setId(entity.getPoll().getId());
-            pollDTO.setName(entity.getPoll().getName());
-            dto.setPollDTO(pollDTO);
+            dto.setPollDTO(PollDTO.builder()
+                    .id(entity.getPoll().getId())
+                    .name(entity.getPoll().getName()).build());
         }
         return dto;
     }
