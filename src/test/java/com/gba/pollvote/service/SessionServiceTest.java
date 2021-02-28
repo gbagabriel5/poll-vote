@@ -3,7 +3,6 @@ package com.gba.pollvote.service;
 import com.gba.pollvote.domain.Poll;
 import com.gba.pollvote.domain.Session;
 import com.gba.pollvote.repository.PollRepository;
-import com.gba.pollvote.repository.SessionRepository;
 import com.gba.pollvote.service.impl.SessionServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +14,8 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -26,27 +25,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureMockMvc
 public class SessionServiceTest {
     @Mock
-    private SessionRepository sessionRepository;
-
-    @Mock
-    private PollRepository pollRepository;
+    protected PollRepository pollRepository;
 
     @InjectMocks
-    private SessionServiceImpl sessionService;
+    protected SessionServiceImpl sessionService;
 
     @BeforeEach
     public void setUp(){}
 
     @Test
-    void createPoll() {
+    void createSession() {
         Poll poll = Poll.builder().id(1L).name("teste").build();
+
         Mockito.when(pollRepository.findById(1L)).thenReturn(Optional.of(poll));
         Optional<Poll> pollSession = pollRepository.findById(1L);
+
         Session session = Session.builder()
                 .sessionDuration(1)
                 .poll(pollSession.get())
-                .startDate(new Date())
-                .endDate(new Date()).build();
+                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now()).build();
+
         Mockito.when(sessionService.create(session)).thenReturn(session);
         Session expectedAssociate = sessionService.create(session);
 
@@ -58,11 +57,11 @@ public class SessionServiceTest {
         List<Session> list = new ArrayList<>();
         list.add(Session.builder()
                 .sessionDuration(1)
-                .startDate(new Date())
+                .startDate(LocalDateTime.now())
                 .poll(Poll.builder().id(1L).name("teste").build()).build());
         list.add(Session.builder()
                 .sessionDuration(2)
-                .startDate(new Date())
+                .startDate(LocalDateTime.now())
                 .poll(Poll.builder().id(2L).name("teste1").build()).build());
 
         Mockito.when(sessionService.getAll()).thenReturn(list);

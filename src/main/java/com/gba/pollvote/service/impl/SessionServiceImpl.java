@@ -8,7 +8,7 @@ import com.gba.pollvote.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +28,7 @@ public class SessionServiceImpl implements SessionService {
             session.setPoll(poll.get());
         else
             throw new EntityNotFoundException("poll.not.found");
-        session.setStartDate(new Date());
+        session.setStartDate(LocalDateTime.now());
         if(session.getSessionDuration() == null)
             session.setSessionDuration(1);
         return sessionRepository.save(session);

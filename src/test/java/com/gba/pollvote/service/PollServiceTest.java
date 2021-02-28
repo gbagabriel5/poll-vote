@@ -13,12 +13,10 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import javax.persistence.EntityExistsException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -27,10 +25,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PollServiceTest {
 
     @Mock
-    private PollRepository pollRepository;
+    protected PollRepository pollRepository;
 
     @InjectMocks
-    private PollServiceImpl pollService;
+    protected PollServiceImpl pollService;
 
     @BeforeEach
     public void setUp(){}
@@ -68,16 +66,5 @@ public class PollServiceTest {
         List<Poll> listExpected = pollService.getAll();
 
         Assertions.assertEquals(listExpected, list);
-    }
-
-    @Test
-    void getPollById() {
-        Long id = 1L;
-        Poll poll = Poll.builder().id(id).name("teste").build();
-
-        Mockito.when(pollService.getById(id)).thenReturn(Optional.of(poll));
-        Optional<Poll> expectedPoll = pollService.getById(id);
-
-        assertThat(expectedPoll).isNotNull();
     }
 }
