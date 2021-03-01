@@ -16,9 +16,9 @@ public class Vote {
 
     private Boolean status;
 
-    @ManyToOne
+    @ManyToOne(optional=false)
     private Session session;
 
-    @ManyToOne
+    @ManyToOne(optional=false)
     private Associate associate;
 }

@@ -5,7 +5,7 @@ import java.util.InputMismatchException;
 
 public class ValidateCpf {
 
-    public static final String INVALID_CPF = "invalid.cpf";
+    public static final String INVALID_CPF = "CPF Invalido!";
 
     private ValidateCpf() {
     }

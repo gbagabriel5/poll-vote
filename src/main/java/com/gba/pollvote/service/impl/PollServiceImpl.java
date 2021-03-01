@@ -17,7 +17,7 @@ public class PollServiceImpl implements PollService {
     @Override
     public Poll create(Poll poll) {
         if(pollRepository.findByName(poll.getName()).isPresent())
-            throw new EntityExistsException("poll.exist");
+            throw new EntityExistsException("Pauta ja cadastrada!");
         else
             poll = pollRepository.save(poll);
         return poll;
