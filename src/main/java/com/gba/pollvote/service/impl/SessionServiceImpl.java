@@ -7,6 +7,7 @@ import com.gba.pollvote.dto.VoteResultDTO;
 import com.gba.pollvote.repository.PollRepository;
 import com.gba.pollvote.repository.SessionRepository;
 import com.gba.pollvote.repository.VoteRepository;
+import com.gba.pollvote.service.Producer;
 import com.gba.pollvote.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,9 @@ public class SessionServiceImpl implements SessionService {
 
     @Autowired
     protected VoteRepository voteRepository;
+
+    @Autowired
+    protected Producer producer;
 
     @Override
     public Session create(Session session) {
@@ -50,12 +54,20 @@ public class SessionServiceImpl implements SessionService {
             int yesVotes = (int) voteList.stream().filter(v -> v.getStatus().equals(true)).count();
             int noVotes = (int) voteList.stream().filter(v -> v.getStatus().equals(false)).count();
 
-            return VoteResultDTO.builder()
+            VoteResultDTO voteResultDTO = VoteResultDTO.builder()
                     .sessionId(id)
                     .pauta(session.get().getPoll().getName())
                     .yesVotes(yesVotes)
                     .noVotes(noVotes)
                     .totalVotes(yesVotes + noVotes).build();
+
+            producer.sendMessage(
+                    "Pauta: "+voteResultDTO.getPauta() +
+                            ", Resultado= Sim:"+yesVotes+
+                            " Nao:"+noVotes+
+                            " Total:" +voteResultDTO.getTotalVotes()
+            );
+            return voteResultDTO;
         } else {
             throw new EntityNotFoundException("Sessao nao encontrada");
         }
