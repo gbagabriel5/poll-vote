@@ -17,6 +17,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.3] 2021-02-27
 
+### Changed
+- Changing database connection from mysql to postgresql
+
+### Fixed
+- thrown messages
+- swagger
+
+## [1.0.3] 2021-02-27
+
 ### Added
 - getResultVotes with test
 - clean Request Object DTO to Session and Vote

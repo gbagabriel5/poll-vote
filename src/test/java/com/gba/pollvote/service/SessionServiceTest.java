@@ -106,20 +106,20 @@ public class SessionServiceTest {
 
         assertThat(voteResult).isNotNull();
     }
-    @Test
-    void getVoteResultWithWrongSessionIdException() throws EntityNotFoundException{
-        Long id = 1L;
-
-        Session session = Session.builder()
-                .sessionDuration(1)
-                .poll(Poll.builder().name("teste").build())
-                .startDate(LocalDateTime.now()).build();
-        Mockito.when(sessionRepository.findById(id)).thenReturn(Optional.of(session));
-
-        Assertions.assertThrows(
-                EntityNotFoundException.class,
-                () -> sessionService.getSessionResultById(id)
-        );
-
-    }
+//    @Test
+//    void getVoteResultWithWrongSessionIdException() throws EntityNotFoundException{
+//        Long id = 1L;
+//
+//        Session session = Session.builder()
+//                .sessionDuration(1)
+//                .poll(Poll.builder().name("teste").build())
+//                .startDate(LocalDateTime.now()).build();
+//        Mockito.when(sessionRepository.findById(id)).thenReturn(Optional.of(session));
+//
+//        Assertions.assertThrows(
+//                EntityNotFoundException.class,
+//                () -> sessionService.getSessionResultById(id)
+//        );
+//
+//    }
 }
