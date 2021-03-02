@@ -35,9 +35,6 @@ public class SessionServiceTest {
     @Mock
     protected PollRepository pollRepository;
 
-    @BeforeEach
-    public void setUp(){}
-
     @Test
     void createSession() {
         Poll poll = Poll.builder().id(1L).name("teste").build();
