@@ -3,5 +3,3 @@ application:
   client:
     endpoint:
       consulta-cpf: "https://user-info.herokuapp.com/users/"
-  kafka:
-    server: "localhost:9092"
