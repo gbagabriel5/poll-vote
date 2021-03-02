@@ -39,7 +39,7 @@ public class VoteController {
         try {
             return new ResponseEntity<>(
                     voteService.vote(voteMapper.convertToEntity(dto)),
-                    HttpStatus.OK
+                    HttpStatus.CREATED
             );
         } catch (Throwable throwable) {
             throw new DefaultException(throwable.getMessage());

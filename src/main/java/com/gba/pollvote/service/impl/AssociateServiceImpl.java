@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AssociateServiceImpl implements AssociateService {
@@ -33,14 +34,42 @@ public class AssociateServiceImpl implements AssociateService {
     }
 
     private void validAssociate(Associate associate) throws InvalidCpfException {
-        ValidateCpf.isCPF(associate.getCpf());
-
-        if(associateRepository.findByCpf(associate.getCpf()).isPresent()){
-            throw new InvalidCpfException("Cpf ja cadastrado!");
+        if(!associate.getName().isEmpty()) {
+            if (associateRepository.findByName(associate.getName()).isPresent())
+                throw new EntityExistsException("Nome ja cadastrado!");
+        } else {
+            throw new NullPointerException("Preencha o campo nome!");
         }
 
-        if(associateRepository.findByName(associate.getName()).isPresent()){
-            throw new EntityExistsException("Nome ja cadastrado!");
+        if(!associate.getCpf().isEmpty()) {
+            ValidateCpf.isCPF(associate.getCpf());
+            if (associateRepository.findByCpf(associate.getCpf()).isPresent())
+                throw new InvalidCpfException("Cpf ja cadastrado!");
+        } else {
+            throw new NullPointerException("Preencha o campo cpf!");
+        }
+
+    }
+
+    @Override
+    public Associate update(Associate associate) throws InvalidCpfException {
+        validAssociateToUpdate(associate);
+        return associateRepository.save(associate);
+    }
+
+    private void validAssociateToUpdate(Associate associate) throws InvalidCpfException {
+        if(!associate.getName().isEmpty()) {
+            Optional<Associate> associateNameReturn = associateRepository.findByName(associate.getName());
+            if (associateNameReturn.isPresent() && !associateNameReturn.get().getId().equals(associate.getId())) {
+                throw new EntityExistsException("Nome ja cadastrado!");
+            }
+        }
+        if(!associate.getCpf().isEmpty()) {
+            ValidateCpf.isCPF(associate.getCpf());
+            Optional<Associate> associateCpfReturn = associateRepository.findByCpf(associate.getCpf());
+            if (associateCpfReturn.isPresent() && !associateCpfReturn.get().getId().equals(associate.getId())) {
+                throw new InvalidCpfException("Cpf ja cadastrado!");
+            }
         }
     }
 

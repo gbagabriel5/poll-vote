@@ -9,7 +9,6 @@ import com.gba.pollvote.repository.PollRepository;
 import com.gba.pollvote.repository.SessionRepository;
 import com.gba.pollvote.repository.VoteRepository;
 import com.gba.pollvote.service.impl.VoteServiceImpl;
-import javassist.NotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +18,6 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Optional;

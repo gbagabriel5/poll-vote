@@ -39,9 +39,9 @@ public class PollServiceTest {
         Poll poll = Poll.builder().name("Teste").build();
 
         Mockito.when(pollService.create(poll)).thenReturn(poll);
-        Poll expectedAssociate = pollService.create(poll);
+        Poll expectedPoll = pollService.create(poll);
 
-        assertThat(poll).isEqualTo(expectedAssociate);
+        assertThat(poll).isEqualTo(expectedPoll);
     }
 
     @Test
@@ -50,6 +50,29 @@ public class PollServiceTest {
         Poll poll = Poll.builder().name("Teste").build();
 
         Mockito.when(pollRepository.findByName("Teste")).thenReturn(Optional.of(poll));
+
+        Assertions.assertThrows(EntityExistsException.class,
+                () -> pollService.create(poll)
+        );
+    }
+
+    @Test
+    void updatePoll() {
+        Poll poll = Poll.builder().id(1L).name("Testando").build();
+
+        Mockito.when(pollService.create(poll)).thenReturn(poll);
+        Poll expectedPoll = pollService.update(poll);
+
+        assertThat(poll).isEqualTo(expectedPoll);
+    }
+
+    @Test
+    void updatePollWithNameExists() {
+        String name = "Teste";
+
+        Poll poll = Poll.builder().id(1L).name(name).build();
+
+        Mockito.when(pollRepository.findByName(name)).thenReturn(Optional.of(poll));
 
         Assertions.assertThrows(EntityExistsException.class,
                 () -> pollService.create(poll)

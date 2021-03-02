@@ -5,7 +5,6 @@ import com.gba.pollvote.exception.InvalidCpfException;
 import com.gba.pollvote.repository.AssociateRepository;
 import com.gba.pollvote.service.impl.AssociateServiceImpl;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,9 +28,6 @@ class AssociateServiceTest {
     protected AssociateRepository associateRepository;
     @InjectMocks
     protected AssociateServiceImpl associateService;
-
-    @BeforeEach
-    public void setUp(){}
 
     @Test
     void createAssociate() throws Exception {
@@ -70,6 +66,41 @@ class AssociateServiceTest {
     void createAssociateWithDuplicatedName() {
 
         Associate associate = Associate.builder().name("Gabriel").cpf("04182914201").build();
+
+        Mockito.when(associateRepository.findByName("Gabriel")).thenReturn(Optional.of(associate));
+
+        Assertions.assertThrows(EntityExistsException.class,
+                () -> associateService.create(associate)
+        );
+    }
+
+    @Test
+    void updateAssociate() throws Exception {
+
+        Associate associate = Associate.builder().id(1L).name("Gabriel Brandao").cpf("04182914201").build();
+
+        Mockito.when(associateService.create(associate)).thenReturn(associate);
+        Associate expectedAssociate = associateService.create(associate);
+
+        assertThat(associate).isEqualTo(expectedAssociate);
+    }
+
+    @Test
+    void updateAssociateWithCpfThatNotYours() {
+
+        Associate associate = Associate.builder().id(1L).name("Gabriel").cpf("04182914201").build();
+
+        Mockito.when(associateRepository.findByCpf("04182914201")).thenReturn(Optional.of(associate));
+
+        Assertions.assertThrows(InvalidCpfException.class,
+                () -> associateService.create(associate)
+        );
+    }
+
+    @Test
+    void updateAssociateWithDuplicatedName() {
+
+        Associate associate = Associate.builder().id(1L).name("Gabriel").build();
 
         Mockito.when(associateRepository.findByName("Gabriel")).thenReturn(Optional.of(associate));
 

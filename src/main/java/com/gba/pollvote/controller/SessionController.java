@@ -7,9 +7,7 @@ import com.gba.pollvote.dto.custom.SessionCustomDTO;
 import com.gba.pollvote.exception.DefaultException;
 import com.gba.pollvote.mapper.SessionMapper;
 import com.gba.pollvote.service.SessionService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +26,10 @@ public class SessionController {
 
     @PostMapping
     @ApiOperation(value = "Create Session")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully created"),
+            @ApiResponse(code = 400, message = "Validation error")
+    })
     public ResponseEntity<SessionDTO> create(
             @ApiParam(value = "Session", required = true)
             @RequestBody @Validated SessionCustomDTO dto
@@ -35,7 +37,7 @@ public class SessionController {
         Session entity = sessionMapper.convertToCustomEntity(dto);
         return new ResponseEntity<>(
                 sessionMapper.convertToDTO(sessionService.create(entity)),
-                HttpStatus.OK
+                HttpStatus.CREATED
         );
     }
 
