@@ -7,7 +7,7 @@ import com.gba.pollvote.dto.VoteResultDTO;
 import com.gba.pollvote.repository.PollRepository;
 import com.gba.pollvote.repository.SessionRepository;
 import com.gba.pollvote.repository.VoteRepository;
-import com.gba.pollvote.service.Producer;
+import com.gba.pollvote.producer.Producer;
 import com.gba.pollvote.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
