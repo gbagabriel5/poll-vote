@@ -1,4 +1,4 @@
-package com.gba.pollvote.service;
+package com.gba.pollvote.producer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
