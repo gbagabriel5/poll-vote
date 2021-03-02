@@ -7,5 +7,5 @@ import java.util.Optional;
 
 @Repository
 public interface PollRepository extends JpaRepository<Poll, Long> {
-    Optional<Object> findByName(String name);
+    Optional<Poll> findByName(String name);
 }

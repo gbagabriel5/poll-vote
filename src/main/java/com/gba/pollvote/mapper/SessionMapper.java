@@ -16,29 +16,23 @@ public class SessionMapper implements GenericMapper<Session,SessionDTO>{
 
     @Override
     public Session convertToEntity(SessionDTO dto) {
-        Session entity = new Session();
-        entity.setId(dto.getId());
-        entity.setSessionDuration(dto.getSessionDuration());
-        entity.setStartDate(dto.getStartDate());
-        if(dto.getPollDTO() != null) {
-            entity.setPoll(Poll.builder()
-                            .id(dto.getPollDTO().getId())
-                            .name(dto.getPollDTO().getName()).build());
-        }
-        return entity;
+        return Session.builder()
+                .id(dto.getId())
+                .sessionDuration(dto.getSessionDuration())
+                .startDate(dto.getStartDate())
+                .poll(Poll.builder()
+                        .id(dto.getPollDTO().getId())
+                        .name(dto.getPollDTO().getName()).build()).build();
     }
 
     @Override
     public SessionDTO convertToDTO(Session entity) {
-        SessionDTO dto = new SessionDTO();
-        dto.setId(entity.getId());
-        dto.setSessionDuration(entity.getSessionDuration());
-        dto.setStartDate(entity.getStartDate());
-        if(entity.getPoll() != null) {
-            dto.setPollDTO(PollDTO.builder()
-                    .id(entity.getPoll().getId())
-                    .name(entity.getPoll().getName()).build());
-        }
-        return dto;
+        return SessionDTO.builder()
+                .id(entity.getId())
+                .sessionDuration(entity.getSessionDuration())
+                .startDate(entity.getStartDate())
+                .pollDTO(PollDTO.builder()
+                        .id(entity.getPoll().getId())
+                        .name(entity.getPoll().getName()).build()).build();
     }
 }
