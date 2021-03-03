@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed for any bug fixes.
 - Security in case of vulnerabilities.
 
+## [1.1.2] 2021-03-02
+### Changed
+- Changing endpoint name of session getvoteresult{sessionId} to result{id}
+
 ## [1.1.1] 2021-03-02
 ### Added
 - Repository and Mapper tests
