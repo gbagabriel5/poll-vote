@@ -31,7 +31,7 @@ mvn clean test
 * Pegar o Resultado da votação da pauta em uma sessão
 
 ## Kafka
-O resultado da votação é enviado em forma de mensagem através do topico **result** com o endpoint **result/{sessionId}**
+O resultado da votação é enviado em forma de mensagem através do topico **result** com o endpoint **result/{id}**
 
 ## API REST HEROKU CLOUD
 Para ver a documentação e usar a api, acesse [POLLVOTE-API](https://agenda-vote.herokuapp.com/swagger-ui.html).
