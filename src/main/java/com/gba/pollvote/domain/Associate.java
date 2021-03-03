@@ -13,9 +13,6 @@ public class Associate implements BaseEntity<Long>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
-    @Column(unique = true)
     private String cpf;
 }
