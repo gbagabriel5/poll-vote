@@ -23,8 +23,15 @@ Para realizar os testes da api é preciso ter o **Maven** e **Java 15** instalad
 ````
 mvn clean test
 ````
+
+## Funcionalidades
+* Criar de associados, pautas, sessões de votaçao e voto
+* Atualizar associados e pautas
+* Listar todos os associados, pautas e sessoes
+* Pegar o Resultado da votação da pauta em uma sessão
+
 ## Kafka
-O resultado da votação é enviado em forma de mensagem através do topico "result".
+O resultado da votação é enviado em forma de mensagem através do topico **result** com o endpoint **result/{sessionId}**
 
 ## API REST HEROKU CLOUD
 Para ver a documentação e usar a api, acesse [POLLVOTE-API](https://agenda-vote.herokuapp.com/swagger-ui.html).
