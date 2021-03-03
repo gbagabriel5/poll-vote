@@ -25,7 +25,7 @@ mvn clean test
 ````
 
 ## Funcionalidades
-* Criar de associados, pautas, sessões de votaçao e voto
+* Criar associados, pautas, sessões de votaçao e voto
 * Atualizar associados e pautas
 * Listar todos os associados, pautas e sessoes
 * Pegar o Resultado da votação da pauta em uma sessão
