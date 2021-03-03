@@ -41,10 +41,10 @@ public class SessionController {
         );
     }
 
-    @GetMapping("getvoteresult/{sessionId}")
+    @GetMapping("result/{id}")
     @ApiParam(value = "Get Session Result")
     public ResponseEntity<VoteResultDTO> getSessionResultById(
-            @PathVariable(value = "sessionId") Long id
+            @PathVariable(value = "id") Long id
     ) {
         try {
             return new ResponseEntity<>(
