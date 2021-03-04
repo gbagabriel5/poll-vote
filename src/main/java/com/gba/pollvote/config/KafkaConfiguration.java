@@ -54,7 +54,6 @@ public class KafkaConfiguration {
         return factory;
     }
 
-
     @Bean
     public ConsumerFactory<String, String> userConsumerFactory() {
         Map<String, Object> config = new HashMap<>();
