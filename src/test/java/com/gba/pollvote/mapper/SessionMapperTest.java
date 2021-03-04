@@ -26,9 +26,10 @@ public class SessionMapperTest {
     @Test
     void convertToCustomEntity() {
         SessionCustomDTO dto = SessionCustomDTO.builder().pollId(1L).sessionDuration(1).build();
+
         Session entity = Session.builder()
                 .poll(Poll.builder().id(dto.getPollId()).build())
-                .sessionDuration(dto.getSessionDuration()).build();
+                .endDate(LocalDateTime.now().plusMinutes(dto.getSessionDuration())).build();
 
         Mockito.when(sessionMapper.convertToCustomEntity(dto)).thenReturn(entity);
         Session entityReturn = sessionMapper.convertToCustomEntity(dto);
@@ -40,16 +41,14 @@ public class SessionMapperTest {
     void convertToEntity() {
         SessionDTO dto = SessionDTO.builder()
                 .id(1L)
-                .sessionDuration(1)
-                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now().plusMinutes(1))
                 .pollDTO(PollDTO.builder()
                         .id(1L)
                         .name("Teste").build()).build();
 
         Session entity = Session.builder()
                 .id(dto.getId())
-                .sessionDuration(dto.getSessionDuration())
-                .startDate(dto.getStartDate())
+                .endDate(dto.getEndDate())
                 .poll(Poll.builder()
                         .id(dto.getPollDTO().getId())
                         .name(dto.getPollDTO().getName()).build())
@@ -65,16 +64,14 @@ public class SessionMapperTest {
     void convertToDTO() {
         Session entity = Session.builder()
                 .id(1L)
-                .sessionDuration(1)
-                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now().plusMinutes(1))
                 .poll(Poll.builder()
                         .id(1L)
                         .name("Teste").build()).build();
 
         SessionDTO dto = SessionDTO.builder()
                 .id(entity.getId())
-                .sessionDuration(entity.getSessionDuration())
-                .startDate(entity.getStartDate())
+                .endDate(entity.getEndDate())
                 .pollDTO(PollDTO.builder()
                         .id(entity.getPoll().getId())
                         .name(entity.getPoll().getName()).build()).build();

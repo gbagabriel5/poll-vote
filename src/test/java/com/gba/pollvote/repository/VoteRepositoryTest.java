@@ -33,9 +33,8 @@ public class VoteRepositoryTest {
 
         Session session = Session.builder()
                 .id(id)
-                .sessionDuration(1)
-                .poll(poll)
-                .startDate(LocalDateTime.now()).build();
+                .endDate(LocalDateTime.now().plusMinutes(1))
+                .poll(poll).build();
 
         Vote vote = Vote.builder().id(id).status(true).associate(associate).session(session).build();
 
@@ -54,9 +53,8 @@ public class VoteRepositoryTest {
 
         Session session = Session.builder()
                 .id(id)
-                .sessionDuration(1)
-                .poll(poll)
-                .startDate(LocalDateTime.now()).build();
+                .endDate(LocalDateTime.now().plusMinutes(1))
+                .poll(poll).build();
 
         List<Vote> voteList = new ArrayList<>();
         voteList.add(Vote.builder().id(id).status(true).associate(associate).session(session).build());

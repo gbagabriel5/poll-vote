@@ -15,6 +15,7 @@ import java.util.Optional;
 @AutoConfigureMockMvc
 @DataJpaTest
 public class AssociateRepositoryTest {
+
     @Mock
     protected AssociateRepository associateRepository;
 

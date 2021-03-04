@@ -13,7 +13,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import javax.persistence.EntityExistsException;
+import com.gba.pollvote.exception.EntityExistsException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,11 +26,12 @@ class AssociateServiceTest {
 
     @Mock
     protected AssociateRepository associateRepository;
+
     @InjectMocks
     protected AssociateServiceImpl associateService;
 
     @Test
-    void createAssociate() throws Exception {
+    void createAssociate() {
 
         Associate associate = Associate.builder().name("Gabriel").cpf("04182914201").build();
 
@@ -75,7 +76,7 @@ class AssociateServiceTest {
     }
 
     @Test
-    void updateAssociate() throws Exception {
+    void updateAssociate() {
 
         Associate associate = Associate.builder().id(1L).name("Gabriel Brandao").cpf("04182914201").build();
 

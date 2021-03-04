@@ -2,7 +2,6 @@ package com.gba.pollvote.controller;
 
 import com.gba.pollvote.domain.Poll;
 import com.gba.pollvote.dto.PollDTO;
-import com.gba.pollvote.exception.DefaultException;
 import com.gba.pollvote.mapper.PollMapper;
 import com.gba.pollvote.service.PollService;
 import io.swagger.annotations.*;
@@ -32,15 +31,8 @@ public class PollController {
             @ApiParam(value = "Poll", required = true)
             @RequestBody @Validated PollDTO dto
     ) {
-        try {
-            Poll entity = pollMapper.convertToEntity(dto);
-            return new ResponseEntity<>(
-                    pollMapper.convertToDTO(pollService.create(entity)),
-                    HttpStatus.CREATED
-            );
-        } catch (Throwable throwable) {
-            throw new DefaultException(throwable.getMessage());
-        }
+        Poll entity = pollMapper.convertToEntity(dto);
+        return new ResponseEntity<>(pollMapper.convertToDTO(pollService.create(entity)), HttpStatus.CREATED);
     }
 
     @PutMapping
@@ -53,23 +45,13 @@ public class PollController {
             @ApiParam(value = "Poll", required = true)
             @RequestBody @Validated PollDTO dto
     ) {
-        try {
-            Poll entity = pollMapper.convertToEntity(dto);
-            return new ResponseEntity<>(
-                    pollMapper.convertToDTO(pollService.update(entity)),
-                    HttpStatus.CREATED
-            );
-        } catch (Throwable throwable) {
-            throw new DefaultException(throwable.getMessage());
-        }
+        Poll entity = pollMapper.convertToEntity(dto);
+        return new ResponseEntity<>(pollMapper.convertToDTO(pollService.update(entity)), HttpStatus.CREATED);
     }
 
     @GetMapping
     @ApiParam(value = "List All Polls")
     public ResponseEntity<List<PollDTO>> findAll() {
-        return new ResponseEntity<>(
-                pollMapper.convertToListDTO(pollService.getAll()),
-                HttpStatus.OK
-        );
+        return new ResponseEntity<>(pollMapper.convertToListDTO(pollService.getAll()), HttpStatus.OK);
     }
 }
