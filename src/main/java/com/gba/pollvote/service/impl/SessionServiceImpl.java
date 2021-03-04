@@ -29,6 +29,8 @@ public class SessionServiceImpl implements SessionService {
     @Autowired
     protected VoteRepository voteRepository;
 
+    private final Logger logger = LoggerFactory.getLogger(SessionServiceImpl.class);
+
     @Override
     public Session create(Session session) {
         return sessionRepository.save(checkIfPollExist(session));
