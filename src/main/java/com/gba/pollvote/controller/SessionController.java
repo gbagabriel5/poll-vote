@@ -4,7 +4,6 @@ import com.gba.pollvote.domain.Session;
 import com.gba.pollvote.dto.SessionDTO;
 import com.gba.pollvote.dto.VoteResultDTO;
 import com.gba.pollvote.dto.custom.SessionCustomDTO;
-import com.gba.pollvote.exception.DefaultException;
 import com.gba.pollvote.mapper.SessionMapper;
 import com.gba.pollvote.service.SessionService;
 import io.swagger.annotations.*;
@@ -35,10 +34,7 @@ public class SessionController {
             @RequestBody @Validated SessionCustomDTO dto
     ) {
         Session entity = sessionMapper.convertToCustomEntity(dto);
-        return new ResponseEntity<>(
-                sessionMapper.convertToDTO(sessionService.create(entity)),
-                HttpStatus.CREATED
-        );
+        return new ResponseEntity<>(sessionMapper.convertToDTO(sessionService.create(entity)), HttpStatus.CREATED);
     }
 
     @GetMapping("result/{id}")
@@ -46,22 +42,12 @@ public class SessionController {
     public ResponseEntity<VoteResultDTO> getSessionResultById(
             @PathVariable(value = "id") Long id
     ) {
-        try {
-            return new ResponseEntity<>(
-                    sessionService.getSessionResultById(id),
-                    HttpStatus.OK
-            );
-        } catch (Throwable throwable) {
-            throw new DefaultException(throwable.getMessage());
-        }
+        return new ResponseEntity<>(sessionService.getSessionResultById(id), HttpStatus.OK);
     }
 
     @GetMapping
     @ApiParam(value = "List All Sessions")
     public ResponseEntity<List<SessionDTO>> findAll() {
-        return new ResponseEntity<>(
-                sessionMapper.convertToListDTO(sessionService.getAll()),
-                HttpStatus.OK
-        );
+        return new ResponseEntity<>(sessionMapper.convertToListDTO(sessionService.getAll()), HttpStatus.OK);
     }
 }

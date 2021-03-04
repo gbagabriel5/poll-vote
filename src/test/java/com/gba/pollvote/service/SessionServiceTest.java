@@ -6,7 +6,6 @@ import com.gba.pollvote.repository.PollRepository;
 import com.gba.pollvote.repository.SessionRepository;
 import com.gba.pollvote.service.impl.SessionServiceImpl;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -43,9 +42,8 @@ public class SessionServiceTest {
         Optional<Poll> pollSession = pollRepository.findById(1L);
 
         Session session = Session.builder()
-                .sessionDuration(1)
-                .poll(pollSession.get())
-                .startDate(LocalDateTime.now()).build();
+                .endDate(LocalDateTime.now().plusMinutes(1))
+                .poll(pollSession.get()).build();
 
         Mockito.when(sessionService.create(session)).thenReturn(session);
         Session expectedAssociate = sessionService.create(session);
@@ -57,12 +55,10 @@ public class SessionServiceTest {
     void getAllSessions() {
         List<Session> list = new ArrayList<>();
         list.add(Session.builder()
-                .sessionDuration(1)
-                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now().plusMinutes(1))
                 .poll(Poll.builder().id(1L).name("teste").build()).build());
         list.add(Session.builder()
-                .sessionDuration(2)
-                .startDate(LocalDateTime.now())
+                .endDate(LocalDateTime.now().plusMinutes(2))
                 .poll(Poll.builder().id(2L).name("teste1").build()).build());
 
         Mockito.when(sessionService.getAll()).thenReturn(list);
@@ -70,5 +66,4 @@ public class SessionServiceTest {
 
         Assertions.assertEquals(listExpected, list);
     }
-
 }

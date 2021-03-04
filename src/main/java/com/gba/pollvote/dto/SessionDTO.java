@@ -13,11 +13,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class SessionDTO {
     private Long id;
-    private Integer sessionDuration;
 
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "GMT-4")
-    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
     private PollDTO pollDTO;
 }

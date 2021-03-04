@@ -1,9 +1,6 @@
 package com.gba.pollvote.controller;
 
-import com.gba.pollvote.domain.Vote;
-import com.gba.pollvote.dto.VoteDTO;
 import com.gba.pollvote.dto.custom.VoteCustomDTO;
-import com.gba.pollvote.exception.DefaultException;
 import com.gba.pollvote.mapper.VoteMapper;
 import com.gba.pollvote.service.VoteService;
 import io.swagger.annotations.*;
@@ -36,13 +33,6 @@ public class VoteController {
             @ApiParam(value = "Vote", required = true)
             @RequestBody @Validated VoteCustomDTO dto
     ) {
-        try {
-            return new ResponseEntity<>(
-                    voteService.vote(voteMapper.convertToEntity(dto)),
-                    HttpStatus.CREATED
-            );
-        } catch (Throwable throwable) {
-            throw new DefaultException(throwable.getMessage());
-        }
+        return new ResponseEntity<>(voteService.vote(voteMapper.convertToEntity(dto)), HttpStatus.CREATED);
     }
 }

@@ -18,7 +18,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import javax.persistence.EntityNotFoundException;
+import com.gba.pollvote.exception.NotFoundException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -26,6 +26,7 @@ import java.util.Optional;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class VoteServiceTest {
+
     @Mock
     protected VoteRepository voteRepository;
 
@@ -41,23 +42,21 @@ public class VoteServiceTest {
     @Mock
     protected SessionRepository sessionRepository;
 
-
     @Test
-    void CreateVote() throws EntityNotFoundException {
+    void CreateVote() {
 
         Associate associate = Associate.builder().name("Gabriel").cpf("04182914201").build();
         Poll poll = Poll.builder().id(1L).name("teste").build();
 
         Session session = Session.builder()
-                .sessionDuration(1)
-                .poll(poll)
-                .startDate(LocalDateTime.now()).build();
+                .endDate(LocalDateTime.now().plusMinutes(1))
+                .poll(poll).build();
 
         Mockito.when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
 
         Vote vote = Vote.builder().id(1L).status(true).associate(associate).session(session).build();
 
-        Assertions.assertThrows(EntityNotFoundException.class, () -> voteService.vote(vote));
+        Assertions.assertThrows(NotFoundException.class, () -> voteService.vote(vote));
     }
 
     @Test
@@ -67,14 +66,13 @@ public class VoteServiceTest {
         Poll poll = Poll.builder().id(1L).name("teste").build();
 
         Session session = Session.builder()
-                .sessionDuration(1)
-                .poll(poll)
-                .startDate(LocalDateTime.now()).build();
+                .endDate(LocalDateTime.now().plusMinutes(1))
+                .poll(poll).build();
 
         Mockito.when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
 
         Vote vote = Vote.builder().id(1L).status(true).associate(associate).session(session).build();
 
-        Assertions.assertThrows(EntityNotFoundException.class, () -> voteService.vote(vote));
+        Assertions.assertThrows(NotFoundException.class, () -> voteService.vote(vote));
     }
 }

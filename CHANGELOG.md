@@ -15,6 +15,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed for any bug fixes.
 - Security in case of vulnerabilities.
 
+## [1.2.0] 2021-03-03
+
+### Added
+- Error logs to Services
+- Exception Handler
+- Entity Exists,NotFound,NullPointer and TimeoutException
+- ErrorsInfo with Errors Exception Messages  
+### Fixed
+- Create and Update Controllers Return
+- Services Exception
+### Changed
+- Exception messages of Services and ValidateCpf to static Strings of ErrorsInfo Class 
+- startDate to endDate of Session
+- convertToCustomEntity of Session Mapper, 
+  adding validation to add endDate value with SessionDuration of SessionCustomDTO + LocalDate.now()
+- convertToEntity and convertToDTO of Session and Vote Mapper and Test
+
 ## [1.1.2] 2021-03-02
 ### Changed
 - Changing endpoint name of session getvoteresult{sessionId} to result{id}
@@ -22,7 +39,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.1] 2021-03-02
 ### Added
 - Repository and Mapper tests
-
 ### Changed
 - Adding validations to poll and associate create and update
 - improving mappers
@@ -33,7 +49,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Kafka on getSessionResult
 - Docker Compose with postgre and kafka
 - Heroku depedencies
-
 ### Removed
 - getResultTest, because it uses a external api of user
 
@@ -41,7 +56,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Changing database connection from mysql to postgresql
-
 ### Fixed
 - thrown messages
 - swagger
@@ -51,13 +65,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - getResultVotes with test
 - clean Request Object DTO to Session and Vote
-
 ### Changed
 - Request Object of Session and Vote
 - convertToEntity of VoteMapper
 - Return of VoteCreate Service and Controller to Boolean
 - startDate type formatter to SessionDTO
-
 ### Removed
 - convertToDTO of VoteMapper, that was not being used.
 
@@ -66,7 +78,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Adding vote and your tests
 - Exception Handler
-
 ### Changed  
 - Return of controller endpoints
 
@@ -77,10 +88,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Session Service Test
 - Generic Mapper
 - findAllPoll
-
 ### Changed
 - Poll mapper to convert entityList for dto and use on controller return of findAll service
-
 ### Removed
 - MessagesService
 

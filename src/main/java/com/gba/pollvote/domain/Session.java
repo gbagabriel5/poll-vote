@@ -15,9 +15,7 @@ public class Session implements BaseEntity<Long>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer sessionDuration;
-
-    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
     @ManyToOne(optional=false)
     private Poll poll;

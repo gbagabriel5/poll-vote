@@ -2,7 +2,6 @@ package com.gba.pollvote.controller;
 
 import com.gba.pollvote.domain.Associate;
 import com.gba.pollvote.dto.AssociateDTO;
-import com.gba.pollvote.exception.DefaultException;
 import com.gba.pollvote.mapper.AssociateMapper;
 import com.gba.pollvote.service.AssociateService;
 import io.swagger.annotations.*;
@@ -34,14 +33,7 @@ public class AssociateController {
             @RequestBody @Validated AssociateDTO dto
     ) {
         Associate entity = associateMapper.convertToEntity(dto);
-        try {
-            return new ResponseEntity<>(
-                    associateMapper.convertToDTO(associateService.create(entity)),
-                    HttpStatus.CREATED
-            );
-        } catch (Throwable throwable) {
-            throw new DefaultException(throwable.getMessage());
-        }
+        return new ResponseEntity<>(associateMapper.convertToDTO(associateService.create(entity)), HttpStatus.CREATED);
     }
 
     @PutMapping
@@ -55,22 +47,12 @@ public class AssociateController {
             @RequestBody @Validated AssociateDTO dto
     ) {
         Associate entity = associateMapper.convertToEntity(dto);
-        try {
-            return new ResponseEntity<>(
-                    associateMapper.convertToDTO(associateService.update(entity)),
-                    HttpStatus.CREATED
-            );
-        } catch (Throwable throwable) {
-            throw new DefaultException(throwable.getMessage());
-        }
+        return new ResponseEntity<>(associateMapper.convertToDTO(associateService.update(entity)), HttpStatus.CREATED);
     }
 
     @GetMapping
     @ApiParam(value = "List All Associates")
     public ResponseEntity<List<AssociateDTO>> findAll() {
-        return new ResponseEntity<>(
-                associateMapper.convertToListDTO(associateService.getAll()),
-                HttpStatus.OK
-        );
+        return new ResponseEntity<>(associateMapper.convertToListDTO(associateService.getAll()), HttpStatus.OK);
     }
 }
