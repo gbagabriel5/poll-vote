@@ -6,7 +6,6 @@ import com.gba.pollvote.domain.Session;
 import com.gba.pollvote.domain.Vote;
 import com.gba.pollvote.dto.VoteResultDTO;
 import com.gba.pollvote.exception.NotFoundException;
-import com.gba.pollvote.producer.Producer;
 import com.gba.pollvote.repository.PollRepository;
 import com.gba.pollvote.repository.SessionRepository;
 import com.gba.pollvote.repository.VoteRepository;
@@ -44,9 +43,6 @@ public class SessionServiceTest {
 
     @Mock
     private VoteRepository voteRepository;
-
-    @Mock
-    private Producer producer;
 
     @Test
     void createSession() {
