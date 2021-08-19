@@ -4,17 +4,16 @@ import com.gba.pollvote.domain.Associate;
 import com.gba.pollvote.domain.Poll;
 import com.gba.pollvote.domain.Session;
 import com.gba.pollvote.domain.Vote;
+import com.gba.pollvote.exception.EntityExistsException;
+import com.gba.pollvote.exception.TimeoutException;
 import com.gba.pollvote.repository.AssociateRepository;
-import com.gba.pollvote.repository.PollRepository;
 import com.gba.pollvote.repository.SessionRepository;
 import com.gba.pollvote.repository.VoteRepository;
 import com.gba.pollvote.service.impl.VoteServiceImpl;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -22,41 +21,138 @@ import com.gba.pollvote.exception.NotFoundException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class VoteServiceTest {
 
     @Mock
-    protected VoteRepository voteRepository;
+    private VoteRepository voteRepository;
 
     @InjectMocks
-    protected VoteServiceImpl voteService;
+    private VoteServiceImpl voteService;
 
     @Mock
-    protected AssociateRepository associateRepository;
+    private AssociateRepository associateRepository;
 
     @Mock
-    protected PollRepository pollRepository;
+    private SessionRepository sessionRepository;
 
     @Mock
-    protected SessionRepository sessionRepository;
+    private AssociateService associateService;
+
+    private final LocalDateTime beforeLocalDateTime = LocalDateTime.of(2021, 1, 1, 12, 0);
+    private final LocalDateTime afterLocalDateTime = LocalDateTime.of(2023, 1, 1, 12, 0);
 
     @Test
-    void CreateVote() {
+    void createVote() {
 
-        Associate associate = Associate.builder().name("Gabriel").cpf("04182914201").build();
+        Associate associate = Associate.builder().id(1L).name("Gabriel").cpf("04182914201").build();
         Poll poll = Poll.builder().id(1L).name("teste").build();
 
-        Session session = Session.builder()
-                .endDate(LocalDateTime.now().plusMinutes(1))
-                .poll(poll).build();
 
-        Mockito.when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        Session session = Session.builder()
+                .id(1L)
+                .endDate(afterLocalDateTime)
+                .poll(poll).build();
 
         Vote vote = Vote.builder().id(1L).status(true).associate(associate).session(session).build();
 
-        Assertions.assertThrows(NotFoundException.class, () -> voteService.vote(vote));
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        when(associateRepository.findById(1L)).thenReturn(Optional.of(associate));
+        when(associateService.checkIfIsAbleToVote("04182914201")).thenReturn(true);
+        when(voteRepository.findByAssociateIdAndSessionId(1L, 1L)).thenReturn(Optional.empty());
+
+        boolean voteResult =  voteService.vote(vote);
+
+        assertThat(voteResult).isTrue();
+    }
+
+    @Test
+    void createVoteNotFoundAssociateError() {
+
+        Associate associate = Associate.builder().id(1L).name("Gabriel").cpf("04182914201").build();
+        Poll poll = Poll.builder().id(1L).name("teste").build();
+
+
+        Session session = Session.builder()
+                .id(1L)
+                .endDate(afterLocalDateTime)
+                .poll(poll).build();
+
+        Vote vote = Vote.builder().id(1L).status(true).associate(associate).session(session).build();
+
+        when(sessionRepository.findById(1L)).thenReturn(Optional.empty());
+        when(associateRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> voteService.vote(vote));
+    }
+
+    @Test
+    void createVoteNotFoundSessionError() {
+
+        Associate associate = Associate.builder().id(1L).name("Gabriel").cpf("04182914201").build();
+        Poll poll = Poll.builder().id(1L).name("teste").build();
+
+
+        Session session = Session.builder()
+                .id(1L)
+                .endDate(afterLocalDateTime)
+                .poll(poll).build();
+
+        Vote vote = Vote.builder().id(1L).status(true).associate(associate).session(session).build();
+
+        when(sessionRepository.findById(1L)).thenReturn(Optional.empty());
+        when(associateRepository.findById(1L)).thenReturn(Optional.of(associate));
+
+        assertThrows(NotFoundException.class, () -> voteService.vote(vote));
+    }
+
+    @Test
+    void CreateVoteIfVoteExists() {
+
+        Associate associate = Associate.builder().id(1L).name("Gabriel").cpf("04182914201").build();
+        Poll poll = Poll.builder().id(1L).name("teste").build();
+
+
+        Session session = Session.builder()
+                .id(1L)
+                .endDate(afterLocalDateTime)
+                .poll(poll).build();
+
+        Vote vote = Vote.builder().id(1L).status(true).associate(associate).session(session).build();
+
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        when(associateRepository.findById(1L)).thenReturn(Optional.of(associate));
+        when(associateService.checkIfIsAbleToVote("04182914201")).thenReturn(true);
+        when(voteRepository.findByAssociateIdAndSessionId(1L, 1L)).thenReturn(Optional.of(vote));
+
+        assertThrows(EntityExistsException.class, () -> voteService.vote(vote));
+    }
+
+    @Test
+    void CreateVoteWithExpiredDate() {
+
+        Associate associate = Associate.builder().id(1L).name("Gabriel").cpf("04182914201").build();
+        Poll poll = Poll.builder().id(1L).name("teste").build();
+
+
+        Session session = Session.builder()
+                .id(1L)
+                .endDate(beforeLocalDateTime)
+                .poll(poll).build();
+
+        Vote vote = Vote.builder().id(1L).status(true).associate(associate).session(session).build();
+
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        when(associateRepository.findById(1L)).thenReturn(Optional.of(associate));
+        when(associateService.checkIfIsAbleToVote("04182914201")).thenReturn(true);
+
+        assertThrows(TimeoutException.class, () -> voteService.vote(vote));
     }
 
     @Test
@@ -69,10 +165,10 @@ public class VoteServiceTest {
                 .endDate(LocalDateTime.now().plusMinutes(1))
                 .poll(poll).build();
 
-        Mockito.when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
 
         Vote vote = Vote.builder().id(1L).status(true).associate(associate).session(session).build();
 
-        Assertions.assertThrows(NotFoundException.class, () -> voteService.vote(vote));
+        assertThrows(NotFoundException.class, () -> voteService.vote(vote));
     }
 }

@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AssociateServiceImpl implements AssociateService {
@@ -37,7 +36,7 @@ public class AssociateServiceImpl implements AssociateService {
     }
 
     private void validAssociate(Associate associate) throws InvalidCpfException {
-        if(!associate.getName().isEmpty()) {
+        if(associate.getName() != null && !associate.getName().isEmpty()) {
             if (associateRepository.findByName(associate.getName()).isPresent()) {
                 logger.error(ErrorsInfo.EXCEPTION_ERROR+ ErrorsInfo.NAME_FOUND);
                 throw new EntityExistsException(ErrorsInfo.NAME_FOUND);
@@ -47,7 +46,7 @@ public class AssociateServiceImpl implements AssociateService {
             throw new NullPointerException(ErrorsInfo.NULL_NAME);
         }
 
-        if(!associate.getCpf().isEmpty()) {
+        if(associate.getCpf() != null) {
             ValidateCpf.isCPF(associate.getCpf());
             if (associateRepository.findByCpf(associate.getCpf()).isPresent()) {
                 logger.error(ErrorsInfo.EXCEPTION_ERROR+ ErrorsInfo.CPF_FOUND);
@@ -61,25 +60,38 @@ public class AssociateServiceImpl implements AssociateService {
 
     @Override
     public Associate update(Associate associate) {
-        validAssociateToUpdate(associate);
-        return associateRepository.save(associate);
+        return associateRepository.save(validateAndGetAssociateToUpdate(associate));
     }
 
-    private void validAssociateToUpdate(Associate associate) throws InvalidCpfException {
-        if(!associate.getName().isEmpty()) {
-            Optional<Associate> associateNameReturn = associateRepository.findByName(associate.getName());
-            if (associateNameReturn.isPresent() && !associateNameReturn.get().getId().equals(associate.getId())) {
-                logger.error(ErrorsInfo.EXCEPTION_ERROR+ ErrorsInfo.NAME_FOUND);
-                throw new EntityExistsException(ErrorsInfo.NAME_FOUND);
+    private Associate validateAndGetAssociateToUpdate(Associate associate) throws InvalidCpfException {
+        if (associate.getName() == null || associate.getName().isEmpty()) {
+            logger.error(ErrorsInfo.EXCEPTION_ERROR + ErrorsInfo.NULL_NAME);
+            throw new NullPointerException(ErrorsInfo.NULL_NAME);
+        }
+        if (associate.getCpf() != null) {
+            ValidateCpf.isCPF(associate.getCpf());
+            var associateCpfReturn = associateRepository.findByCpf(associate.getCpf());
+            if (associateCpfReturn.isEmpty()) {
+                logger.error(ErrorsInfo.EXCEPTION_ERROR+ ErrorsInfo.CPF_NOT_FOUND);
+                throw new InvalidCpfException(ErrorsInfo.CPF_NOT_FOUND);
+            } else {
+                return Associate.builder()
+                        .id(associateCpfReturn.get().getId())
+                        .cpf(associateCpfReturn.get().getCpf())
+                        .name(associate.getName())
+                        .build();
             }
         }
-        if(!associate.getCpf().isEmpty()) {
-            ValidateCpf.isCPF(associate.getCpf());
-            Optional<Associate> associateCpfReturn = associateRepository.findByCpf(associate.getCpf());
-            if (associateCpfReturn.isPresent() && !associateCpfReturn.get().getId().equals(associate.getId())) {
-                logger.error(ErrorsInfo.EXCEPTION_ERROR+ ErrorsInfo.CPF_FOUND);
-                throw new InvalidCpfException(ErrorsInfo.CPF_FOUND);
-            }
+        if (associate.getId() == null) {
+            logger.error(ErrorsInfo.EXCEPTION_ERROR+ ErrorsInfo.NULL_PARAMETERS);
+            throw new NullPointerException(ErrorsInfo.NULL_PARAMETERS);
+        } else {
+            var associateReturn = associateRepository.getOne(associate.getId());
+            return Associate.builder()
+                    .id(associateReturn.getId())
+                    .cpf(associateReturn.getCpf())
+                    .name(associate.getName())
+                    .build();
         }
     }
 
@@ -91,9 +103,9 @@ public class AssociateServiceImpl implements AssociateService {
     @Override
     public boolean checkIfIsAbleToVote(String cpf) throws NotFoundException {
         AbleToVoteDto flagAbleToVoteDto;
-        try{
+        try {
             flagAbleToVoteDto = userClient.isAbleToVote(cpf);
-        }catch (FeignException e){
+        } catch (FeignException e) {
             logger.error(ErrorsInfo.EXCEPTION_ERROR+ ErrorsInfo.UNABLE_TO_VOTE);
             throw new NotFoundException(ErrorsInfo.UNABLE_TO_VOTE, e);
         }
