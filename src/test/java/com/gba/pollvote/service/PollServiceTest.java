@@ -3,12 +3,10 @@ package com.gba.pollvote.service;
 import com.gba.pollvote.domain.Poll;
 import com.gba.pollvote.repository.PollRepository;
 import com.gba.pollvote.service.impl.PollServiceImpl;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -17,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -34,7 +35,7 @@ public class PollServiceTest {
 
         Poll poll = Poll.builder().name("Teste").build();
 
-        Mockito.when(pollService.create(poll)).thenReturn(poll);
+        when(pollService.create(poll)).thenReturn(poll);
         Poll expectedPoll = pollService.create(poll);
 
         assertThat(poll).isEqualTo(expectedPoll);
@@ -45,9 +46,9 @@ public class PollServiceTest {
 
         Poll poll = Poll.builder().name("Teste").build();
 
-        Mockito.when(pollRepository.findByName("Teste")).thenReturn(Optional.of(poll));
+        when(pollRepository.findByName("Teste")).thenReturn(Optional.of(poll));
 
-        Assertions.assertThrows(EntityExistsException.class,
+        assertThrows(EntityExistsException.class,
                 () -> pollService.create(poll)
         );
     }
@@ -56,7 +57,7 @@ public class PollServiceTest {
     void updatePoll() {
         Poll poll = Poll.builder().id(1L).name("Testando").build();
 
-        Mockito.when(pollService.create(poll)).thenReturn(poll);
+        when(pollService.create(poll)).thenReturn(poll);
         Poll expectedPoll = pollService.update(poll);
 
         assertThat(poll).isEqualTo(expectedPoll);
@@ -66,12 +67,13 @@ public class PollServiceTest {
     void updatePollWithNameExists() {
         String name = "Teste";
 
+        Poll pollReturn = Poll.builder().id(2L).name(name).build();
         Poll poll = Poll.builder().id(1L).name(name).build();
 
-        Mockito.when(pollRepository.findByName(name)).thenReturn(Optional.of(poll));
+        when(pollRepository.findByName(name)).thenReturn(Optional.of(pollReturn));
 
-        Assertions.assertThrows(EntityExistsException.class,
-                () -> pollService.create(poll)
+        assertThrows(EntityExistsException.class,
+                () -> pollService.update(poll)
         );
     }
 
@@ -81,9 +83,9 @@ public class PollServiceTest {
         list.add(Poll.builder().name("Teste").build());
         list.add(Poll.builder().name("Teste1").build());
 
-        Mockito.when(pollService.getAll()).thenReturn(list);
+        when(pollService.getAll()).thenReturn(list);
         List<Poll> listExpected = pollService.getAll();
 
-        Assertions.assertEquals(listExpected, list);
+        assertEquals(listExpected, list);
     }
 }
